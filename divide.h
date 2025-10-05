@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <utility>
+#include <random>
+#include <ctime>
 
 template <typename T>
 
@@ -23,8 +25,24 @@ T b_binaria(T valor, std::vector<T>& array, int ini, int fin){
 }
 
 template <typename T>
-int Particion (std::vector<T>& array, int ini, int fin){
-        T x = array[fin];
+int Particion (std::vector<T>& array, int ini, int fin, int tipo){
+    switch (tipo) {
+		case 1: // Último elemento
+			break;
+		case 2: // Primer elemento
+			std::swap(array[ini], array[fin]);
+			break;
+		case 3: // Pivote aleatorio
+			{
+				int randIndex = ini + std::rand() % (fin - ini + 1);
+				std::swap(array[randIndex], array[fin]);
+			}
+			break;
+		default:
+			// Último elemento por defecto
+			break;
+	}    
+	T x = array[fin];
         int i = ini;
         for(int j = ini; j < fin - 1; j++){
                 if (array[j] <= x){
@@ -38,11 +56,29 @@ int Particion (std::vector<T>& array, int ini, int fin){
 
 
 template <typename T>
-void Quicksort(std::vector<T>& array, int ini, int fin){
+void Quicksort_last(std::vector<T>& array, int ini, int fin){
 	if (ini < fin){
-		int pivot = Particion(array, ini, fin);
-		Quicksort(array, ini, pivot - 1);
-		Quicksort(array, pivot + 1, fin);
+		int pivot = Particion(array, ini, fin, 1);
+		Quicksort_last(array, ini, pivot - 1);
+		Quicksort_last(array, pivot + 1, fin);
+	}
+}
+
+template <typename T>
+void Quicksort_first(std::vector<T>& array, int ini, int fin){
+	if (ini < fin){
+		int pivot = Particion(array, ini, fin, 2);
+		Quicksort_first(array, ini, pivot - 1);
+		Quicksort_first(array, pivot + 1, fin);
+	}
+}
+
+template <typename T>
+void Quicksort_random(std::vector<T>& array, int ini, int fin){
+	if (ini < fin){
+		int pivot = Particion(array, ini, fin, 3);
+		Quicksort_random(array, ini, pivot - 1);
+		Quicksort_random(array, pivot + 1, fin);
 	}
 }
 
